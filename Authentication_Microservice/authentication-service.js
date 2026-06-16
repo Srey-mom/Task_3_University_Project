@@ -17,19 +17,18 @@ const JWT_SECRETE = process.env.JWT_SECRETE;
 
 // (You can delete or comment out the hardcoded 'users' array now!)
 
-// 3. UPDATE THE LOGIN ROUTE TO BE ASYNCHRONOUS (async/await)
 app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+    // 1. Take emailid and pass from Postman
+    const { emailid, pass } = req.body;
 
     try {
-        // Find the user in your MongoDB collection matching the username and password
-        // Adjust fields (e.g., 'username' vs 'email') based on your exact schema definition
-        const user = await Person.findOne({ username: username, password: password });
+        // 2. Query MongoDB using your actual schema fields
+        const user = await Person.findOne({ emailid: emailid, pass: pass });
 
         if (user) {
-            // Generate token using data from the database document
+            // 3. Generate the token with the user's real role from the database
             const token = jwt.sign(
-                { username: user.username, role: user.role || 'student' }, 
+                { name: user.name, role: user.role || 'student' }, 
                 JWT_SECRETE, 
                 { expiresIn: '24h' }
             );
