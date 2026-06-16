@@ -40,13 +40,13 @@ app.use("/registration", (req, res) => {
 //REDIRECT TO THE STUDENT MICROSERVICE
 app.use('/student',authToken, authRole('student'), (req, res) => {
     console.log("INSIDE API GATEWAY STUDENT ROUTE")
-    proxy.web(req, res, { target: 'http://localhost:5000' });
+    proxy.web(req, res, { target: 'http://44.203.250.229:5000' });
 });
 
 //REDIRECT TO THE TEACHER MICROSERVICE
 app.use('/teacher', authToken, authRole('teacher'),(req, res) => {
     console.log("INSIDE API GATEWAY TEACHER ROUTE")
-    proxy.web(req, res, { target: 'http://localhost:5001' });
+    proxy.web(req, res, { target: 'http://44.204.233.250:5001' });
 });
 
 //REDIRECT TO THE LOGIN(Authentication) MICROSERVICE
