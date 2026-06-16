@@ -17,10 +17,12 @@ function authToken(req, res, next) {
     if (token == null) return res.status(401).json("Please send token");
 
     jwt.verify(token, JWT_SECRETE, (err, user) => {
-        if (err) return res.status(403).json("Invalid token", err);
-        req.user = user;
-        next()
-    });
+    // CHANGE THIS LINE:
+    if (err) return res.status(403).json({ message: "Invalid token", error: err.message });
+    
+    req.user = user;
+    next();
+});
 }
 
 function authRole(role) {
@@ -38,9 +40,15 @@ app.use("/registration", (req, res) => {
 });
 
 //REDIRECT TO THE STUDENT MICROSERVICE
-app.use('/student',authToken, authRole('student'), (req, res) => {
-    console.log("INSIDE API GATEWAY STUDENT ROUTE")
-    proxy.web(req, res, { target: 'http://44.203.250.229:5000' });
+// REDIRECT TO THE STUDENT MICROSERVICE
+app.use('/student', authToken, authRole('student'), (req, res) => {
+    console.log("INSIDE API GATEWAY STUDENT ROUTE");
+    
+    // ADD THIS LINE BELOW TO STRIP THE PREFIX:
+    req.url = req.url.replace(/^\/student/, '') || '/';
+    
+    // Change this to target localhost/127.0.0.1 since it's on the same EC2 machine
+    proxy.web(req, res, { target: 'http://127.0.0.1:5000' });
 });
 
 //REDIRECT TO THE TEACHER MICROSERVICE
