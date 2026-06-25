@@ -40,7 +40,6 @@ app.use("/registration", (req, res) => {
 });
 
 //REDIRECT TO THE STUDENT MICROSERVICE
-// REDIRECT TO THE STUDENT MICROSERVICE
 app.use('/student', authToken, authRole('student'), (req, res) => {
     console.log("INSIDE API GATEWAY STUDENT ROUTE");
     
@@ -48,13 +47,13 @@ app.use('/student', authToken, authRole('student'), (req, res) => {
     req.url = req.url.replace(/^\/student/, '') || '/';
     
     // Change this to target localhost/127.0.0.1 since it's on the same EC2 machine
-    proxy.web(req, res, { target: 'http://127.0.0.1:5000' });
+    proxy.web(req, res, { target: 'http://3.92.184.105:5000' });
 });
 
 //REDIRECT TO THE TEACHER MICROSERVICE
 app.use('/teacher', authToken, authRole('teacher'),(req, res) => {
     console.log("INSIDE API GATEWAY TEACHER ROUTE")
-    proxy.web(req, res, { target: 'http://44.204.233.250:5001' });
+    proxy.web(req, res, { target: 'http://35.171.4.17:5001' });
 });
 
 //REDIRECT TO THE LOGIN(Authentication) MICROSERVICE
